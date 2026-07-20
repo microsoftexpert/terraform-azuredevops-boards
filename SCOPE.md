@@ -1,4 +1,4 @@
-# SCOPE — `tf-mod-azuredevops-boards`
+# SCOPE — `terraform-azuredevops-boards`
 
 > **Module type:** `aggregation`  ·  **Provider:** `microsoft/azuredevops` (`>= 1.0, < 2.0`)  ·  **Scope:** project-scoped
 
@@ -16,15 +16,15 @@ Boards configuration aggregation: area-path permissions, iteration permissions, 
 
 ## Out-of-scope resources (consumed by ID)
 
-- `azuredevops_project` — provided as `project_id` by `tf-mod-azuredevops-project`.
-- Group/team subject descriptors — provided by `tf-mod-azuredevops-group` / `tf-mod-azuredevops-team`.
+- `azuredevops_project` — provided as `project_id` by `terraform-azuredevops-project`.
+- Group/team subject descriptors — provided by `terraform-azuredevops-group` / `terraform-azuredevops-team`.
 
 ## Consumes
 
 | Input | Type | Source module |
 |---|---|---|
-| `project_id` | string | `tf-mod-azuredevops-project` |
-| `principal` | string | tf-mod-azuredevops-group / tf-mod-azuredevops-team (for area/iteration permissions) |
+| `project_id` | string | `terraform-azuredevops-project` |
+| `principal` | string | terraform-azuredevops-group / terraform-azuredevops-team (for area/iteration permissions) |
 
 ## Required Azure DevOps scopes / auth
 
@@ -46,7 +46,7 @@ Boards configuration aggregation: area-path permissions, iteration permissions, 
 
 - DISCOVERY: provider v1.15.1 exposes NO azuredevops_area / azuredevops_iteration RESOURCE (data sources only) — classification-node creation is out of scope; this module manages area/iteration PERMISSIONS and dashboards.
 - `area_permissions` / `iteration_permissions` target an EXISTING classification-node path. `path` is optional — omit (or `"/"`) for the root node. There is no provider resource to create the node itself.
-- `principal` must be a **group subject descriptor**, not a plain group name — wire it from `tf-mod-azuredevops-group` / `tf-mod-azuredevops-team` (or a `data.azuredevops_group`).
+- `principal` must be a **group subject descriptor**, not a plain group name — wire it from `terraform-azuredevops-group` / `terraform-azuredevops-team` (or a `data.azuredevops_group`).
 - `permissions` action states are constrained to `Allow` / `Deny` / `NotSet` (validated in `variables.tf`).
 - `replace` defaults to **`true`** on both permission collections: the ACE set is REPLACED, not merged. Set `replace = false` to merge into ACEs managed outside Terraform.
 - Permission resources expose **no `timeouts`** block. Only `azuredevops_dashboard` supports `timeouts` (create/read/update/delete) — rendered per-dashboard only when a value is set.

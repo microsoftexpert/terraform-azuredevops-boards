@@ -40,10 +40,10 @@ Whether it's a star, a professional connection, or a coffee, every gesture helps
 
 ```mermaid
 flowchart LR
- project["tf-mod-azuredevops-project<br/>(emits project_id)"]
- group["tf-mod-azuredevops-group<br/>(group descriptor)"]
- team["tf-mod-azuredevops-team<br/>(team_id / descriptor)"]
- boards["tf-mod-azuredevops-boards<br/>(THIS MODULE)"]
+ project["terraform-azuredevops-project<br/>(emits project_id)"]
+ group["terraform-azuredevops-group<br/>(group descriptor)"]
+ team["terraform-azuredevops-team<br/>(team_id / descriptor)"]
+ boards["terraform-azuredevops-boards<br/>(THIS MODULE)"]
 
  project -->|project_id| boards
  group -->|principal| boards
@@ -53,7 +53,7 @@ flowchart LR
  style project fill:#0078D4,color:#fff
 ```
 
-Most resources in the suite flow from `tf-mod-azuredevops-project` via `project_id`; this module additionally consumes **group/team subject descriptors** for its permission collections.
+Most resources in the suite flow from `terraform-azuredevops-project` via `project_id`; this module additionally consumes **group/team subject descriptors** for its permission collections.
 
 ---
 
@@ -65,7 +65,7 @@ This is an **aggregation** module — there is **no parent `this` node**. The th
 flowchart TB
  pid(["project_id (input)"])
 
- subgraph boards["tf-mod-azuredevops-boards"]
+ subgraph boards["terraform-azuredevops-boards"]
  direction LR
  ap["azuredevops_area_permissions<br/>.area_permissions<br/>(for_each)"]
  ip["azuredevops_iteration_permissions<br/>.iteration_permissions<br/>(for_each)"]
@@ -114,7 +114,7 @@ The module declares the provider **requirement** only — it configures **no** `
 ## 📁 Module Structure
 
 ```
-tf-mod-azuredevops-boards/
+terraform-azuredevops-boards/
 ├── providers.tf # Terraform & provider version pins (no provider block)
 ├── variables.tf # project_id + three typed collection maps
 ├── main.tf # three for_each collections — no `this`
@@ -129,7 +129,7 @@ tf-mod-azuredevops-boards/
 
 ```hcl
 module "boards" {
-  source = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-boards?ref=v1.0.0"
+  source = "git::https://github.com/microsoftexpert/terraform-azuredevops-boards?ref=v1.0.0"
 
   project_id = module.project.project_id
 
@@ -151,9 +151,9 @@ Every collection defaults to `{}`, so the smallest valid call passes only `proje
 
 | Input | Type | Source module |
 |---|---|---|
-| `project_id` | `string` | `tf-mod-azuredevops-project` (`project_id`) |
-| `principal` (per entry) | `string` | `tf-mod-azuredevops-group` / `tf-mod-azuredevops-team` (group **subject descriptor**) |
-| `team_id` (per dashboard) | `string` | `tf-mod-azuredevops-team` (`id`) |
+| `project_id` | `string` | `terraform-azuredevops-project` (`project_id`) |
+| `principal` (per entry) | `string` | `terraform-azuredevops-group` / `terraform-azuredevops-team` (group **subject descriptor**) |
+| `team_id` (per dashboard) | `string` | `terraform-azuredevops-team` (`id`) |
 
 ### Emits
 
@@ -176,7 +176,7 @@ Every collection defaults to `{}`, so the smallest valid call passes only `proje
 
 ```hcl
 module "boards" {
-  source     = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-boards?ref=v1.0.0"
+  source     = "git::https://github.com/microsoftexpert/terraform-azuredevops-boards?ref=v1.0.0"
   project_id = module.project.project_id
 
   dashboards = {
@@ -191,7 +191,7 @@ module "boards" {
 
 ```hcl
 module "boards" {
-  source     = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-boards?ref=v1.0.0"
+  source     = "git::https://github.com/microsoftexpert/terraform-azuredevops-boards?ref=v1.0.0"
   project_id = module.project.project_id
 
   area_permissions = {
@@ -364,13 +364,13 @@ dashboards = {
 
 ```hcl
 module "group_readers" {
-  source     = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-group?ref=v1.0.0"
+  source     = "git::https://github.com/microsoftexpert/terraform-azuredevops-group?ref=v1.0.0"
   project_id = module.project.project_id
   name       = "Boards Readers"
 }
 
 module "boards" {
-  source     = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-boards?ref=v1.0.0"
+  source     = "git::https://github.com/microsoftexpert/terraform-azuredevops-boards?ref=v1.0.0"
   project_id = module.project.project_id
 
   area_permissions = {
@@ -402,25 +402,25 @@ output "all_boards_resource_ids" {
 
 ```hcl
 module "project" {
-  source     = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-project?ref=v1.0.0"
+  source     = "git::https://github.com/microsoftexpert/terraform-azuredevops-project?ref=v1.0.0"
   name       = "Lending Platform"
   visibility = "private"
 }
 
 module "team_platform" {
-  source     = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-team?ref=v1.0.0"
+  source     = "git::https://github.com/microsoftexpert/terraform-azuredevops-team?ref=v1.0.0"
   project_id = module.project.project_id
   name       = "Platform"
 }
 
 module "group_readers" {
-  source     = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-group?ref=v1.0.0"
+  source     = "git::https://github.com/microsoftexpert/terraform-azuredevops-group?ref=v1.0.0"
   project_id = module.project.project_id
   name       = "Boards Readers"
 }
 
 module "boards" {
-  source     = "git::https://github.com/microsoftexpert/tf-mod-azuredevops-boards?ref=v1.0.0"
+  source     = "git::https://github.com/microsoftexpert/terraform-azuredevops-boards?ref=v1.0.0"
   project_id = module.project.project_id
 
   area_permissions = {
@@ -459,7 +459,7 @@ module "boards" {
 
 ```hcl
 variable "project_id" {
-  type = string # IMMUTABLE — wire from tf-mod-azuredevops-project (project_id)
+  type = string # IMMUTABLE — wire from terraform-azuredevops-project (project_id)
 }
 
 variable "area_permissions" {
@@ -526,7 +526,7 @@ variable "dashboards" {
 
 - **Project-scoped, organization-aware.** Every collection hangs off a single `project_id`. Dashboards may further narrow to a **team** via `team_id`; permissions apply to project-level classification nodes.
 - **Permissions target existing nodes only.** Provider **v1.15.1** exposes `azuredevops_area` / `azuredevops_iteration` only as **data sources** — there is no resource to *create* a classification node. This module manages **ACEs on existing area/iteration paths** and **dashboards**, not the node hierarchy. Create the node hierarchy through the portal/REST/process first.
-- **`principal` is a subject descriptor.** The provider expects a **group subject descriptor**, not a display name. Source it from `tf-mod-azuredevops-group` / `tf-mod-azuredevops-team` outputs (or a `data.azuredevops_group`).
+- **`principal` is a subject descriptor.** The provider expects a **group subject descriptor**, not a display name. Source it from `terraform-azuredevops-group` / `terraform-azuredevops-team` outputs (or a `data.azuredevops_group`).
 - **`replace` semantics.** Both permission collections default `replace = true` → the ACE set is **replaced** on each apply. Use `replace = false` to merge with ACEs maintained outside Terraform; expect the two to fight if both manage the same action.
 - **Immutable fields.** `project_id` is ForceNew on dashboards (and effectively fixed for the permission ACEs). Changing it destroys/recreates.
 - **Eventual consistency.** Newly-created groups/teams and freshly-created classification nodes can take a few seconds to propagate; an apply that races node creation may need a re-run.
@@ -549,7 +549,7 @@ variable "dashboards" {
 ## 🚀 Runbook
 
 ```powershell
-cd C:\GitHubCode\newazuredevopsmodules\tf-mod-azuredevops-boards
+cd C:\GitHubCode\newazuredevopsmodules\terraform-azuredevops-boards
 terraform init -backend=false
 terraform validate
 terraform fmt -check
@@ -599,7 +599,7 @@ ids = {
 |---|---|---|
 | `403 Forbidden` / `TF401027` on apply | Identity scoped via PAT but **not** a member of **Project Administrators** | ACE edits are governed by group membership, not PAT scope — add the identity to Project Administrators (PCA action). |
 | `The classification node... does not exist` | `path` points at a node that was never created | Create the area/iteration node first (portal/REST/process); this module does not create nodes. |
-| Permission applies but doesn't take effect | Wrong `principal` — display name passed instead of a subject descriptor | Wire `principal` from `tf-mod-azuredevops-group`/`_team` descriptor outputs. |
+| Permission applies but doesn't take effect | Wrong `principal` — display name passed instead of a subject descriptor | Wire `principal` from `terraform-azuredevops-group`/`_team` descriptor outputs. |
 | Permissions you set manually keep disappearing | `replace = true` (default) makes Terraform authoritative | Set `replace = false` to merge, or move all ACEs for the node into Terraform. |
 | `refresh_interval must be either 0 or 5` | Unsupported refresh value | Use `0` (off) or `5` (minutes) only. |
 | Dashboard `name` conflict on a team | Team dashboards require unique names | Rename; only project-level dashboards may share a name. |
